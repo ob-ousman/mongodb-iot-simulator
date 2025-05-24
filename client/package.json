@@ -9,7 +9,8 @@
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^3.4.1",
+    "dayjs": "^1.11.9"
   },
   "scripts": {
     "start": "react-scripts start",

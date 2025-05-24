@@ -1,5 +1,5 @@
 const mongoURI = {
-    admin: 'mongodb+srv://admin:admin@sensor-dashboard-gzkom.gcp.mongodb.net/test?retryWrites=true&w=majority'
+    admin: 'mongodb+srv://boukar:boukar@cluster0.z2kwyrb.mongodb.net/iot_project?retryWrites=true&w=majority'
 }
 
 module.exports = mongoURI;
