@@ -1,7 +1,7 @@
 {
   "name": "sensor_dashboard",
   "version": "1.0.0",
-  "description": "A dashboard for sensor data visualization",
+  "description": "Tableau de bord pour la visualisation des données de capteurs",
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
@@ -9,7 +9,7 @@
     "server": "nodemon server.js",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
-  "author": "Atick Faisal",
+  "author": "Boukar OUSMANOU",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.0",
