@@ -10,16 +10,15 @@ import dayjs from "dayjs";
 const interval = 5000;
 
 class App extends Component {
-
   constructor() {
     super();
     this.state = {
       sensors: [],
       structuredSensors: {},
-	  temperatures: {},
-	  humidites: {},
-	  lumieres: {},
-	  selectedSite: 'Usine Nord', // default selected site
+      temperatures: {},
+      humidites: {},
+      lumieres: {},
+      selectedSite: 'Usine Nord', // default selected site
     };
   }
 
@@ -71,7 +70,7 @@ class App extends Component {
         } else if (type === "lumiere") {
           if (!newLums[site]) newLums[site] = [];
           newLums[site].push(valeur);
-		  newLums[site] = newLums[site].slice(-6); // keep only the last 6 values
+		      newLums[site] = newLums[site].slice(-6); // keep only the last 6 values
         }
       }
     });
@@ -87,63 +86,52 @@ class App extends Component {
 
 
   render() {
+    if (!this.state.structuredSensors || Object.keys(this.state.structuredSensors).length === 0) {
+      return <div className="App"><h1>Chargement en cours...</h1></div>;
+    }
     return (
       <div className="App">
         <div>
           <h1>Tableau de board</h1>
-          {Object.entries(this.state.structuredSensors).map(([site, data]) => (
-            <div className={`container ${this.state.selectedSite && site !== this.state.selectedSite ? 'hidden' : ''}`}>
+            <div className="container">
               <div className="card_container topbar">
-				<div className="card">
-					<div className="value">
-						<h2>{dayjs(data.timestamp).format("DD/MM/YYYY HH:mm:ss")}</h2></div>
-					<div className="title"> <h2>{site}</h2> </div>
-					<div className="usine">
-						<select className="select" value={this.state.selectedSite} onChange={this.handleSelectChange}>
-							<option value="">Sélectionner...</option>
-							<option value="Usine Nord">Usine Nord</option>
-							<option value="Usine Sud">Usine Sud</option>
-							<option value="Usine Est">Usine Est</option>
-							<option value="Usine Ouest">Usine Ouest</option>
-						</select>
-					</div>
-				</div>
-			  </div>
+                <div className="card">
+                  <div className="value">
+                    <h2>{dayjs(Object.values(this.state.structuredSensors[this.state.selectedSite]).at(-1).timestamp).format("DD/MM/YYYY - HH:mm:ss")}</h2></div>
+                  <div className="title"> <h2>{this.state.selectedSite}</h2> </div>
+                  <div className="usine">
+                    <select className="select" value={this.state.selectedSite} onChange={this.handleSelectChange}>
+                      <option value="">Sélectionner...</option>
+                      {Object.entries(this.state.structuredSensors).map(([site, data]) => (
+                        <option key={site} value={site}>{site}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
 
               <div className="card_container topbar">
                 <div className="card">
-                  <div className="icon">
+                  <div className={`icon ${this.state.temperatures?.[this.state.selectedSite]?.slice(-1)[0] > 40 ? 'alert' : ''}`}>
                     <img src={temp} alt="hot_icon" width="40vw" />
-                  </div>
-                  <div className="title">
-                    <h2>Température</h2>
-                  </div>
-                  <div className="value">
-                    <h2>
-                      {data.temperature}
-                    </h2>
-                  </div>
+                    </div>
+                  <div className="title"> <h2>Température</h2> </div>
+                  <div className="value"> <h2> {this.state.temperatures[this.state.selectedSite].slice(-1)[0]} </h2> </div>
                 </div>
                 <div className="card">
-                  <div className="icon">
-                    <img src={hum} alt="hum_icon" width="40vw" />
-                  </div>
-                  <div className="title">
-                    <h2>Humidité</h2>
-                  </div>
-                  <div className="value">
-                    <h2>{data.humidite}</h2>
-                  </div>
+                  <div className={`icon ${this.state.humidites?.[this.state.selectedSite]?.slice(-1)[0] > 70 ? 'alert' : ''}`}>
+                    <img src={hum} alt="hum_icon" width="40vw"/>
+                    </div>
+                  <div className="title"> <h2>Humidité</h2> </div>
+                  <div className="value"> <h2>{this.state.humidites[this.state.selectedSite].slice(-1)[0]}</h2> </div>
                 </div>
                 <div className="card">
-                  <div className="icon">
+                  <div className={`icon ${this.state.lumieres?.[this.state.selectedSite]?.slice(-1)[0] > 1000 ? 'alert' : ''}`}>
                     <img src={light} alt="light_icon" width="40vw" />
-                  </div>
-                  <div className="title">
-                    <h2>Lumière ambiante</h2>
-                  </div>
-                  <div className="value">
-                    <h2>{data.lumiere}</h2>
+                    </div>
+                  <div className="title"> <h2>Lumière ambiante</h2> </div>
+                  <div className="value"> 
+                    <h2>{this.state.lumieres[this.state.selectedSite].slice(-1)[0]}</h2>
                   </div>
                 </div>
               </div>
@@ -158,7 +146,7 @@ class App extends Component {
                         datasets: [
                           {
                             label: "Temperature",
-                            data: this.state.temperatures[site] || [],
+                            data: this.state.temperatures[this.state.selectedSite] || [],
                             backgroundColor: "rgba(54, 162, 235, 0.2)",
 
                             borderColor: "rgba(54, 162, 235, 1)",
@@ -209,7 +197,7 @@ class App extends Component {
                         datasets: [
                           {
                             label: "Humidité",
-                            data: this.state.humidites[site] || [],
+                            data: this.state.humidites[this.state.selectedSite] || [],
                             backgroundColor: [
                               "rgba(255, 99, 132, 0.2)",
                               "rgba(54, 162, 235, 0.2)",
@@ -273,17 +261,9 @@ class App extends Component {
                         datasets: [
                           {
                             label: "Lumière ambiante",
-                            data: this.state.lumieres[site] || [],
+                            data: this.state.lumieres[this.state.selectedSite] || [],
                             backgroundColor: "rgba(75, 192, 192, 0.2)",
                             borderColor: "rgba(75, 192, 192, 1)",
-                            borderWidth: 1,
-                          },
-                          {
-                            label: "Temperature",
-                            data: this.state.temperatures[site] || [],
-                            backgroundColor: "rgba(54, 162, 235, 0.1)",
-
-                            borderColor: "rgba(54, 162, 235, 1)",
                             borderWidth: 1,
                           },
                         ],
@@ -323,7 +303,6 @@ class App extends Component {
                 </div>
               </div>
             </div>
-          ))}
         </div>
         <footer>
           IONIS-STM
