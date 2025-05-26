@@ -60,15 +60,15 @@ class App extends Component {
         newStructuredData[site][type] = valeur;
 
         if (type === "temperature") {
-          if (!newTemps[site]) newTemps[site] = [];
+          if (!newTemps[site]) newTemps[site] = [0,0,0,0,0,0]; // initialize with 6 zeros
           newTemps[site].push(valeur);
 		  newTemps[site] = newTemps[site].slice(-6); // keep only the last 6 values
         } else if (type === "humidite") {
-          if (!newHums[site]) newHums[site] = [];
+          if (!newHums[site]) newHums[site] = [0,0,0,0,0,0]; // initialize with 6 zeros
           newHums[site].push(valeur);
 		  newHums[site] = newHums[site].slice(-6); // keep only the last 6 values
         } else if (type === "lumiere") {
-          if (!newLums[site]) newLums[site] = [];
+          if (!newLums[site]) newLums[site] = [0,0,0,0,0,0]; // initialize with 6 zeros
           newLums[site].push(valeur);
 		      newLums[site] = newLums[site].slice(-6); // keep only the last 6 values
         }
