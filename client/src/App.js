@@ -18,7 +18,7 @@ class App extends Component {
       temperatures: {},
       humidites: {},
       lumieres: {},
-      selectedSite: 'Usine Nord', // default selected site
+      selectedSite: 'Paris', // default selected site
     };
   }
 
@@ -50,7 +50,7 @@ class App extends Component {
 
     sensors.forEach(sensor => {
       const { site, type, valeur, timestamp } = sensor;
-
+      
       if (!newStructuredData[site]) {
         newStructuredData[site] = {};
         newStructuredData[site].timestamp = timestamp;
@@ -88,7 +88,7 @@ class App extends Component {
   render() {
     if (!this.state.structuredSensors || Object.keys(this.state.structuredSensors).length === 0) {
       return <div className="App"><h1>Chargement en cours...</h1></div>;
-    }
+    }console.log("structuredSensors", this.state.structuredSensors);
     return (
       <div className="App">
         <div>
@@ -97,7 +97,7 @@ class App extends Component {
               <div className="card_container topbar">
                 <div className="card">
                   <div className="value">
-                    <h2>{dayjs(Object.values(this.state.structuredSensors[this.state.selectedSite]).at(-1).timestamp).format("DD/MM/YYYY - HH:mm:ss")}</h2></div>
+                    <h2>{dayjs(this.state.structuredSensors[this.state.selectedSite].timestamp).format("DD/MM/YYYY - HH:mm:ss")}</h2></div>
                   <div className="title"> <h2>{this.state.selectedSite}</h2> </div>
                   <div className="usine">
                     <select className="select" value={this.state.selectedSite} onChange={this.handleSelectChange}>
@@ -304,10 +304,15 @@ class App extends Component {
               </div>
             </div>
         </div>
+        <div>
+          Délai synchronisation : {interval / 1000} secondes - 
+          Temps de traitement : {dayjs().diff(dayjs(this.state.structuredSensors[this.state.selectedSite].timestamp), 'second')} secondes - 
+          Nombre de capteurs : {Object.keys(this.state.structuredSensors).length * 3}
+        </div>
         <footer>
-          IONIS-STM
+          <strong>IONIS-STM</strong>
           &nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;
-          Master 2 Informatique - Data
+          <strong>Master 2 Informatique - Data</strong>
           <p>&copy; Développé par : Koffi, Ghofrane et Boukar, 2025</p>
         </footer>
       </div>

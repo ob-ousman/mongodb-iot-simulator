@@ -33,7 +33,7 @@ app.get('/', function(req, res) {
 // sends the last 7 values
 // react app sensds this get request
 app.get('/api/sensors', function(req, res) {
-    Item.find().sort({ timestamp: -1 }).limit(12).then(items => {
+    Item.find().sort({ timestamp: -1 }).limit(30).then(items => {
         res.json(items); //console.log("reponses", items);
     }
     )
